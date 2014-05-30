@@ -21,7 +21,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
     // camera.position.z = 1000;
     camera.position.z = 0;
-    window.camera = camera;
 
     scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
@@ -29,10 +28,8 @@ function init() {
     starGeometry = new THREE.Geometry();
 
     // set the material for each star
-    // TODO: make a sprite
     starSprite = THREE.ImageUtils.loadTexture( "img/sprites/star.png" );
 	material = new THREE.ParticleSystemMaterial( { color: 0xffffff, size: 20, sizeAttenuation: true, map: starSprite, blending: THREE.AdditiveBlending, depthTest: true, transparent: true } );
-    //material.color.setHSL( 1.0, 1, 1 );
 
     // create all our star vertices from the API
     createStarVertices();
@@ -43,7 +40,6 @@ function init() {
     scene.add( particles );
 
     // lets create a renderer that takes up the whole screen
-    //renderer = new THREE.CanvasRenderer({clearAlpha: 1});
     renderer = new THREE.WebGLRenderer( { clearAlpha: 1 } );
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -63,8 +59,7 @@ function createStarVertices() {
     	var vertex = new THREE.Vector3();
     	vertex.x = 2000 * Math.random() - 1000;
     	vertex.y = 2000 * Math.random() - 1000;
-    	// vertex.z = 2000 * Math.random() - 1000;
-        vertex.z = (2000 * Math.random()) - 1000;
+    	vertex.z = 2000 * Math.random() - 1000;
 
     	starGeometry.vertices.push( vertex );
     }
@@ -77,21 +72,17 @@ function moveCamera() {
     var vx = mouseX/500;
     var vy = mouseY/500;
 
+    // if in a 100x100 deadzone in the middle of the screen, set velocity to 0
     if (Math.abs(mouseX) < 50 && Math.abs(mouseY) < 50) {
         vx = 0; vy = 0;
     }
 
-    console.log(vy);
+    // make sure we don't go too fast
     camera.position.x += clamp(vx, MAXSPEED);
     camera.position.y -= clamp(vy, MAXSPEED);
 
-    if (wheelDelta != 0) {
-
-        if (wheelDelta > 0)
-            camera.position.z += wheelDelta * 0.05;
-        else
-            camera.position.z += wheelDelta * 0.05;
-    }
+    // bit of mousewheel action
+    camera.position.z += wheelDelta * 0.05;
 }
 
 function clamp (v, d) {
