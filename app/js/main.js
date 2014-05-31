@@ -122,9 +122,9 @@ function createStarVertices() {
 
     for ( i = 0; i < 10000; i ++ ) {
     	var vertex = new THREE.Vector3();
-    	vertex.x = 2000 * Math.random() - 1000;
-    	vertex.y = 2000 * Math.random() - 1000;
-    	vertex.z = 2000 * Math.random() - 1000;
+    	vertex.x = 5000 * Math.random() - 2500;
+    	vertex.y = 5000 * Math.random() - 2500;
+    	vertex.z = 1000 * Math.random() - 500;
 
     	starGeometry.vertices.push( vertex );
     }
