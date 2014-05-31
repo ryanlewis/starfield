@@ -70,7 +70,7 @@ function createBackground() {
             var tilePath = 'img/tiles/final-creation-canvas_r' + i + '_c' + j + '.jpg';
 
             var texture = THREE.ImageUtils.loadTexture( tilePath );
-            var material = new THREE.MeshBasicMaterial({ map: texture });
+            var material = new THREE.MeshBasicMaterial({ map: texture, fog: false });
             material.depthTest = false;
             material.depthWrite = false;
             tiles.push(material);
