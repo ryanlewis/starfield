@@ -132,10 +132,10 @@ function createStarVertices() {
 
 function moveCamera() {
 
-    var MAXSPEED = 0.5;
+    var MAXSPEED = 5;
 
-    var vx = mouseX/500;
-    var vy = mouseY/500;
+    var vx = mouseX/100;
+    var vy = mouseY/100;
 
     // if in a 100x100 deadzone in the middle of the screen, set velocity to 0
     if (Math.abs(mouseX) < 50 && Math.abs(mouseY) < 50) {
