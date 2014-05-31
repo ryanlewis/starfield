@@ -7,6 +7,7 @@ require({
 ], function(THREE) {
 
 var camera, scene, renderer;
+var backgroundScene, backgroundCamera, tiles;
 var starGeometry, material, mesh, starSprite;
 var mouseX = 0, mouseY = 0, wheelDelta = 0, zVel = 0;
 
@@ -31,6 +32,8 @@ function init() {
     starSprite = THREE.ImageUtils.loadTexture( "img/sprites/star.png" );
 	material = new THREE.ParticleSystemMaterial( { color: 0xffffff, size: 20, sizeAttenuation: true, map: starSprite, blending: THREE.AdditiveBlending, depthTest: true, transparent: true } );
 
+    createBackground();
+
     // create all our star vertices from the API
     createStarVertices();
 
@@ -51,6 +54,64 @@ function init() {
 	// document.addEventListener( 'touchstart', onDocumentTouchStart, false );
 	// document.addEventListener( 'touchmove', onDocumentTouchMove, false );
 	window.addEventListener( 'resize', onWindowResize, false );
+}
+
+function createBackground() {
+    var ROWS = 20;
+    var COLUMNS = 25;
+
+    // grab all the textures
+    var tiles = [];
+
+    for (var i = ROWS; i >= 1; i-- ) {
+
+        for (var j = 1; j <= COLUMNS; j++) {
+
+            var tilePath = 'img/tiles/final-creation-canvas_r' + i + '_c' + j + '.jpg';
+
+            var texture = THREE.ImageUtils.loadTexture( tilePath );
+            var material = new THREE.MeshBasicMaterial({ map: texture });
+            material.depthTest = false;
+            material.depthWrite = false;
+            tiles.push(material);
+        }
+    }
+
+    // create our background plane, with as many segments as we need
+    var backgroundGeometry = new THREE.PlaneGeometry(5,5, COLUMNS, ROWS);
+
+    // reset UVs - we'll recreate new ones so that our tile textures render correctly
+    backgroundGeometry.faceVertexUvs[0] = [];
+
+    // assign each triangle to the correct material (2 triangles at once)
+    for (var i = 0; i < backgroundGeometry.faces.length/2; i++) {
+        var j = 2 * i;
+
+        backgroundGeometry.faces[ j ].materialIndex = i;
+        backgroundGeometry.faces[ j + 1 ].materialIndex = i;
+
+        // set the UV for the face so that the material renders correctly
+        backgroundGeometry.faceVertexUvs[0].push([
+            new THREE.Vector2( 0, 0 ),
+            new THREE.Vector2( 0, 1 ),
+            new THREE.Vector2( 1, 0 ),
+        ]);
+
+        backgroundGeometry.faceVertexUvs[0].push([
+            new THREE.Vector2( 0, 1 ),
+            new THREE.Vector2( 1, 1 ),
+            new THREE.Vector2( 1, 0 ),
+        ]);
+    }
+
+    // create background mesh from geometry and materials
+    var backgroundMesh = new THREE.Mesh(backgroundGeometry, new THREE.MeshFaceMaterial(tiles));
+
+    // Create background scene
+    backgroundScene = new THREE.Scene();
+    backgroundCamera = new THREE.Camera();
+    backgroundScene.add(backgroundCamera);
+    backgroundScene.add(backgroundMesh);
 }
 
 function createStarVertices() {
@@ -99,6 +160,9 @@ function animate() {
     requestAnimationFrame(animate);
 
     moveCamera();
+    renderer.autoClear = false;
+    renderer.clear();
+    renderer.render(backgroundScene, backgroundCamera);
     renderer.render(scene, camera);
 
 }
