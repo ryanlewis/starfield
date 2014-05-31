@@ -122,9 +122,9 @@ function createStarVertices() {
 
     for ( i = 0; i < 10000; i ++ ) {
     	var vertex = new THREE.Vector3();
-    	vertex.x = 2000 * Math.random() - 1000;
-    	vertex.y = 2000 * Math.random() - 1000;
-    	vertex.z = 2000 * Math.random() - 1000;
+    	vertex.x = 5000 * Math.random() - 2500;
+    	vertex.y = 5000 * Math.random() - 2500;
+    	vertex.z = 1000 * Math.random() - 500;
 
     	starGeometry.vertices.push( vertex );
     }
@@ -132,10 +132,10 @@ function createStarVertices() {
 
 function moveCamera() {
 
-    var MAXSPEED = 0.5;
+    var MAXSPEED = 5;
 
-    var vx = mouseX/500;
-    var vy = mouseY/500;
+    var vx = mouseX/100;
+    var vy = mouseY/100;
 
     // if in a 100x100 deadzone in the middle of the screen, set velocity to 0
     if (Math.abs(mouseX) < 50 && Math.abs(mouseY) < 50) {
