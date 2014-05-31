@@ -78,7 +78,7 @@ function createBackground() {
     }
 
     // create our background plane, with as many segments as we need
-    var backgroundGeometry = new THREE.PlaneGeometry(5,5, COLUMNS, ROWS);
+    var backgroundGeometry = new THREE.PlaneGeometry(10000,10000, COLUMNS, ROWS);
 
     // reset UVs - we'll recreate new ones so that our tile textures render correctly
     backgroundGeometry.faceVertexUvs[0] = [];
@@ -107,11 +107,15 @@ function createBackground() {
     // create background mesh from geometry and materials
     var backgroundMesh = new THREE.Mesh(backgroundGeometry, new THREE.MeshFaceMaterial(tiles));
 
+    // move it backwards
+    backgroundMesh.position.z = -1000;
+
     // Create background scene
     backgroundScene = new THREE.Scene();
     backgroundCamera = new THREE.Camera();
-    backgroundScene.add(backgroundCamera);
-    backgroundScene.add(backgroundMesh);
+    //backgroundScene.add(backgroundCamera);
+    // backgroundScene.add(backgroundMesh);
+    scene.add(backgroundMesh);
 }
 
 function createStarVertices() {
